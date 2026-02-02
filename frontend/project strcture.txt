@@ -1,0 +1,203 @@
+api key     AIzaSyB5oGelpzP1RoPvUSovJL9Y_JKGWYip-dU
+
+
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CircularProgress,
+  Stack,
+  Paper,
+  Divider,
+  Box,
+  Chip,
+} from "@mui/material";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import DownloadIcon from '@mui/icons-material/Download';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+
+const CareerRoadmap = () => {
+  const [formData, setFormData] = useState({
+    currentRole: "",
+    targetRole: "",
+    skills: "",
+    experience: "",
+    interests: "",
+  });
+
+  const [roadmap, setRoadmap] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const generateRoadmap = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:5000/api/generate-roadmap", formData, {
+        withCredentials: true,
+      });
+      setRoadmap(res.data.roadmap);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to generate roadmap");
+    }
+    setLoading(false);
+  };
+
+  const downloadRoadmap = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/download-roadmap",
+        { roadmapText: roadmap, name: formData.currentRole || "Career_Roadmap" },
+        { responseType: "blob", withCredentials: true }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${formData.currentRole || "Career_Roadmap"}.docx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to download roadmap");
+    }
+  };
+
+  return (
+    <Container maxWidth="md" sx={{ mt: 5, mb: 8 }}>
+      {/* Page Header */}
+      <Stack direction="row" alignItems="center" spacing={2} mb={4}>
+        <RocketLaunchIcon color="primary" fontSize="large" />
+        <Typography variant="h4" fontWeight="bold" color="primary">
+          Career Roadmap Generator
+        </Typography>
+      </Stack>
+
+      {/* Form Section */}
+      <Paper elevation={3} sx={{ p: 4, mb: 6, bgcolor: "#f0f4f8" }}>
+        <Typography variant="h6" gutterBottom fontWeight="bold" color="textSecondary">
+          Enter Your Details
+        </Typography>
+        <Stack spacing={3}>
+          <TextField
+            label="Current Role / Education"
+            name="currentRole"
+            value={formData.currentRole}
+            onChange={handleChange}
+            fullWidth
+            variant="outlined"
+            InputProps={{ startAdornment: <AutoAwesomeIcon sx={{ mr: 1 }} /> }}
+          />
+          <TextField
+            label="Target Role / Career Goal"
+            name="targetRole"
+            value={formData.targetRole}
+            onChange={handleChange}
+            fullWidth
+            variant="outlined"
+          />
+          <TextField
+            label="Skills (comma separated)"
+            name="skills"
+            value={formData.skills}
+            onChange={handleChange}
+            fullWidth
+            variant="outlined"
+          />
+          <TextField
+            label="Experience Details"
+            name="experience"
+            value={formData.experience}
+            onChange={handleChange}
+            fullWidth
+            variant="outlined"
+          />
+          <TextField
+            label="Interests (optional)"
+            name="interests"
+            value={formData.interests}
+            onChange={handleChange}
+            fullWidth
+            variant="outlined"
+          />
+        </Stack>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mt={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={generateRoadmap}
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <RocketLaunchIcon />}
+            sx={{ flex: 1 }}
+          >
+            {loading ? "Generating..." : "Generate Roadmap"}
+          </Button>
+          {roadmap && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={downloadRoadmap}
+              startIcon={<DownloadIcon />}
+              sx={{ flex: 1 }}
+            >
+              Download as DOCX
+            </Button>
+          )}
+        </Stack>
+      </Paper>
+
+      {/* Roadmap Display */}
+      {roadmap && (
+        <Paper elevation={3} sx={{ p: 4, bgcolor: "#ffffff" }}>
+          <Typography variant="h6" fontWeight="bold" gutterBottom color="primary">
+            Your Personalized Career Roadmap
+          </Typography>
+          <Divider sx={{ mb: 3 }} />
+          <Box sx={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+            {roadmap.split("\n").map((line, idx) => {
+              if (line.match(/^(Skills|Projects|Certifications|Timeline|Tips)/i)) {
+                return (
+                  <Typography
+                    key={idx}
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    color="secondary"
+                    sx={{ mt: 2, mb: 1 }}
+                  >
+                    {line}
+                  </Typography>
+                );
+              } else if (line.startsWith("-")) {
+                return (
+                  <Chip
+                    key={idx}
+                    label={line.replace("-", "").trim()}
+                    variant="outlined"
+                    color="info"
+                    sx={{ mr: 1, mb: 1 }}
+                  />
+                );
+              } else {
+                return (
+                  <Typography key={idx} variant="body1" sx={{ mb: 1 }}>
+                    {line}
+                  </Typography>
+                );
+              }
+            })}
+          </Box>
+        </Paper>
+      )}
+    </Container>
+  );
+};
+
+export default CareerRoadmap;

@@ -1,0 +1,56 @@
+# ===============================
+# Environment variables
+# ===============================
+.env
+.env.local
+.env.development
+.env.production
+
+# ===============================
+# Node dependencies
+# ===============================
+node_modules/
+
+# ===============================
+# Logs
+# ===============================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# ===============================
+# OS / Editor files
+# ===============================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ===============================
+# Build / cache
+# ===============================
+dist/
+build/
+.cache/
+.tmp/
+
+# ===============================
+# Runtime generated files
+# ===============================
+resumes/
+uploads/
+
+# ===============================
+# Database / secrets
+# ===============================
+*.sql
+*.sqlite
+*.db
+
+# ===============================
+# Test coverage
+# ===============================
+coverage/
