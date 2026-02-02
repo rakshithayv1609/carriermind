@@ -3,8 +3,6 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import session from "express-session";
-import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
@@ -35,16 +33,6 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "secret123",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
 // ================= RESUMES DIR =================
 const resumesDir = path.join(__dirname, "resumes");
 if (!fs.existsSync(resumesDir)) fs.mkdirSync(resumesDir);
