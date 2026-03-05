@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import API from "../api";
 import {
   Container,
   TextField,
@@ -28,15 +29,18 @@ export default function InterviewQnA() {
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/interview/generate", { topic });
+      const res = await axios.post(`${API}/api/interview/generate`, {
+        topic,
+      });
+
       setQna(res.data.qna);
     } catch (err) {
-      console.error(err);
+      console.error("Error generating questions:", err);
     }
     setLoading(false);
   };
 
-  // Download as Word Doc with professional formatting
+  // Download as Word Doc
   const handleDownload = () => {
     const doc = new Document({
       sections: [
@@ -49,28 +53,32 @@ export default function InterviewQnA() {
               alignment: AlignmentType.CENTER,
               spacing: { after: 300 },
             }),
-            ...qna.map((item, index) => [
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: `${index + 1}. ${item.question}`,
-                    bold: true,
-                    size: 26,
-                  }),
-                ],
-                spacing: { after: 100 },
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: `Answer: ${item.answer}`,
-                    size: 24,
-                  }),
-                ],
-                indent: { left: 300 },
-                spacing: { after: 200 },
-              }),
-            ]).flat(),
+
+            ...qna
+              .map((item, index) => [
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text: `${index + 1}. ${item.question}`,
+                      bold: true,
+                      size: 26,
+                    }),
+                  ],
+                  spacing: { after: 100 },
+                }),
+
+                new Paragraph({
+                  children: [
+                    new TextRun({
+                      text: `Answer: ${item.answer}`,
+                      size: 24,
+                    }),
+                  ],
+                  indent: { left: 300 },
+                  spacing: { after: 200 },
+                }),
+              ])
+              .flat(),
           ],
         },
       ],
@@ -92,7 +100,6 @@ export default function InterviewQnA() {
       }}
     >
       <Container maxWidth="md">
-        {/* ===== Header ===== */}
         <Fade in timeout={800}>
           <Stack
             direction="row"
@@ -112,6 +119,7 @@ export default function InterviewQnA() {
                 },
               }}
             />
+
             <Typography
               variant="h3"
               fontWeight="bold"
@@ -125,7 +133,6 @@ export default function InterviewQnA() {
           </Stack>
         </Fade>
 
-        {/* ===== Input Section ===== */}
         <Fade in timeout={1000}>
           <Card
             elevation={10}
@@ -135,7 +142,6 @@ export default function InterviewQnA() {
               background: "rgba(255,255,255,0.9)",
               backdropFilter: "blur(10px)",
               boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-              transition: "all 0.3s ease-in-out",
               mb: 5,
             }}
           >
@@ -163,11 +169,6 @@ export default function InterviewQnA() {
                 InputProps={{
                   sx: {
                     borderRadius: "12px",
-                    "&:hover fieldset": { borderColor: "#0288d1" },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#0288d1",
-                      boxShadow: "0 0 8px rgba(2,136,209,0.3)",
-                    },
                   },
                 }}
               />
@@ -190,12 +191,6 @@ export default function InterviewQnA() {
                   borderRadius: "12px",
                   background:
                     "linear-gradient(90deg, #0288d1 0%, #03a9f4 100%)",
-                  "&:hover": {
-                    background:
-                      "linear-gradient(90deg, #0277bd 0%, #039be5 100%)",
-                    transform: "scale(1.02)",
-                  },
-                  transition: "0.3s",
                 }}
               >
                 {loading ? "Generating..." : "Generate Questions"}
@@ -204,7 +199,6 @@ export default function InterviewQnA() {
           </Card>
         </Fade>
 
-        {/* ===== Display Section ===== */}
         {qna.length > 0 && (
           <Fade in timeout={1200}>
             <Box>
@@ -227,11 +221,6 @@ export default function InterviewQnA() {
                         background:
                           "linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.9) 100%)",
                         boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
-                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                        "&:hover": {
-                          transform: "translateY(-6px)",
-                          boxShadow: "0 10px 24px rgba(0,0,0,0.15)",
-                        },
                       }}
                     >
                       <CardContent>
@@ -245,6 +234,7 @@ export default function InterviewQnA() {
                         >
                           {index + 1}. {item.question}
                         </Typography>
+
                         <Typography
                           variant="body2"
                           color="textSecondary"
@@ -275,12 +265,6 @@ export default function InterviewQnA() {
                     borderRadius: "12px",
                     background:
                       "linear-gradient(90deg, #43a047 0%, #66bb6a 100%)",
-                    "&:hover": {
-                      background:
-                        "linear-gradient(90deg, #2e7d32 0%, #43a047 100%)",
-                      transform: "scale(1.05)",
-                    },
-                    transition: "0.3s",
                   }}
                 >
                   Download Q&A (Word Doc)

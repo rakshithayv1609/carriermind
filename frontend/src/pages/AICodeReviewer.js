@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
+import API from "../api";
 
 const AICodeReviewer = () => {
   const [code, setCode] = useState("");
@@ -31,10 +32,11 @@ const AICodeReviewer = () => {
     setReview("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/ai/code-review", {
+      const res = await axios.post(`${API}/api/ai/code-review`, {
         code,
         language,
       });
+
       setReview(res.data.review);
     } catch (err) {
       console.error(err);
@@ -66,7 +68,6 @@ const AICodeReviewer = () => {
             boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
           }}
         >
-          {/* HEADER */}
           <Typography
             variant="h3"
             align="center"
@@ -92,7 +93,6 @@ const AICodeReviewer = () => {
             Get quick, AI-driven feedback and suggestions to improve your code.
           </Typography>
 
-          {/* INPUT AREA */}
           <TextField
             fullWidth
             multiline
@@ -112,7 +112,6 @@ const AICodeReviewer = () => {
             }}
           />
 
-          {/* LANGUAGE */}
           <TextField
             fullWidth
             label="Programming Language * "
@@ -128,7 +127,6 @@ const AICodeReviewer = () => {
             }}
           />
 
-          {/* BUTTON */}
           <Button
             fullWidth
             variant="contained"
@@ -159,7 +157,6 @@ const AICodeReviewer = () => {
             )}
           </Button>
 
-          {/* REVIEW OUTPUT */}
           <Fade in={!!review} timeout={800}>
             <Box
               sx={{

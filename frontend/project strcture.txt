@@ -40,7 +40,7 @@ const CareerRoadmap = () => {
   const generateRoadmap = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/generate-roadmap", formData, {
+      const res = await axios.post("http://https://carriermind.onrender.com/api/generate-roadmap", formData, {
         withCredentials: true,
       });
       setRoadmap(res.data.roadmap);
@@ -54,7 +54,7 @@ const CareerRoadmap = () => {
   const downloadRoadmap = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/download-roadmap",
+        "http://https://carriermind.onrender.com/api/download-roadmap",
         { roadmapText: roadmap, name: formData.currentRole || "Career_Roadmap" },
         { responseType: "blob", withCredentials: true }
       );

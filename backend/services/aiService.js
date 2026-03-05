@@ -4,7 +4,7 @@ import axios from "axios";
 // Fetch job matches from backend AI service
 export const fetchJobMatches = async (profile, skills) => {
   try {
-    const response = await axios.post("http://localhost:5000/api/jobs/match", {
+    const response = await axios.post("http://https://carriermind.onrender.com/api/jobs/match", {
       profile,
       skills,
     });

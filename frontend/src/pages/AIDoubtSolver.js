@@ -20,7 +20,9 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github-dark.css"; // Modern code highlight theme
+import "highlight.js/styles/github-dark.css";
+
+import API from "../api";   // ✅ import API base url
 
 const AIDoubtSolver = () => {
   const [question, setQuestion] = useState("");
@@ -29,11 +31,15 @@ const AIDoubtSolver = () => {
 
   const handleAsk = async () => {
     if (!question.trim()) return alert("Please type a question");
+
     setLoading(true);
     setAnswer("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/ai/doubt", { question });
+      const res = await axios.post(`${API}/api/ai/doubt`, {
+        question,
+      });
+
       setAnswer(res.data.answer);
     } catch (err) {
       console.error(err);
@@ -69,7 +75,7 @@ const AIDoubtSolver = () => {
             "&:hover": { boxShadow: "0 10px 40px rgba(0,0,0,0.3)" },
           }}
         >
-          {/* Header Section */}
+          {/* Header */}
           <Box
             sx={{
               textAlign: "center",
@@ -82,6 +88,7 @@ const AIDoubtSolver = () => {
             <Zoom in>
               <PsychologyAltIcon sx={{ fontSize: 60, color: "#3949ab", mb: 1 }} />
             </Zoom>
+
             <Typography
               variant="h3"
               fontWeight="bold"
@@ -94,6 +101,7 @@ const AIDoubtSolver = () => {
             >
               AI Doubt Solver
             </Typography>
+
             <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
               Get instant AI-powered answers to your technical or career questions.
             </Typography>
@@ -108,7 +116,7 @@ const AIDoubtSolver = () => {
             />
           </Divider>
 
-          {/* Input Section */}
+          {/* Input */}
           <Box>
             <TextField
               fullWidth
@@ -150,7 +158,8 @@ const AIDoubtSolver = () => {
               >
                 {loading ? (
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <CircularProgress size={20} color="inherit" /> Thinking...
+                    <CircularProgress size={20} color="inherit" />
+                    Thinking...
                   </Box>
                 ) : (
                   "Ask AI"
@@ -159,7 +168,7 @@ const AIDoubtSolver = () => {
             </Tooltip>
           </Box>
 
-          {/* Answer Section */}
+          {/* Answer */}
           <Fade in={!!answer} timeout={800}>
             <Box
               sx={{
@@ -209,8 +218,6 @@ const AIDoubtSolver = () => {
                     borderRadius: "10px",
                     overflowX: "auto",
                   },
-                  "& ul": { pl: 3, mb: 1 },
-                  "& strong": { color: "#1a237e" },
                 }}
               >
                 <ReactMarkdown
