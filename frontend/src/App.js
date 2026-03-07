@@ -7,7 +7,7 @@ import CareerRoadmap from "./pages/CareerRoadmap";
 import InterviewQnA from "./pages/InterviewQnA";
 import AIDoubtSolver from "./pages/AIDoubtSolver";
 import AICodeReviewer from "./pages/AICodeReviewer";
-import FeedbackForm from "./pages/FeedbackForm";
+
 import About from "./pages/About";
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
         <Route path="/jobs" element={<InterviewQnA />} />
         <Route path="/doubts" element={<AIDoubtSolver />} />
         <Route path="/code-review" element={<AICodeReviewer />} />
-        <Route path="/ui" element={<FeedbackForm />} />
+
         <Route path="/about" element={<About />} />
 
       </Routes>
