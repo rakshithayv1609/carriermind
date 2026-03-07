@@ -2,10 +2,10 @@
 import dotenv from "dotenv";
 dotenv.config();// backend/routes/aiRoutes.js
 import express from "express";
-// ✅ Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// ✅ Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const router = express.Router();
 
 

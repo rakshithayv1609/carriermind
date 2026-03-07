@@ -3,13 +3,13 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import aiRoutes from "./routes/aiRoutes.js";
-import feedbackRoutes from "./routes/feedbackRoutes.js";
+
 import interviewRoutes from "./routes/interviewRoutes.js";
 
 // ✅ Gemini AI
@@ -27,14 +27,18 @@ const PORT = process.env.PORT || 5000;
 
 // ================= MIDDLEWARE =================
 app.use(cors({
-  origin: "*",
-  credentials: true
+  origin: process.env.FRONTEND_URL || "*"
 }));
 app.use(bodyParser.json());
 // ================= RESUMES DIR =================
 const resumesDir = path.join(__dirname, "resumes");
 if (!fs.existsSync(resumesDir)) fs.mkdirSync(resumesDir);
 app.use("/resumes", express.static(resumesDir));
+
+// ================= HEALTH CHECK =================
+app.get("/", (req, res) => {
+  res.json({ status: "ok", message: "CarrierMind API is running" });
+});
 
 
 // ================= GEMINI INIT =================
@@ -245,7 +249,6 @@ app.use("/uploads", express.static("uploads"));
 // ================= ROUTES =================
 app.use("/api/interview", interviewRoutes);
 app.use("/api/ai", aiRoutes);
-app.use("/api/feedback", feedbackRoutes);
 
 // ================= START SERVER =================
 app.listen(PORT, () => {

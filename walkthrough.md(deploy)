@@ -1,0 +1,99 @@
+# CarrierMind — Deployment Walkthrough
+
+## Changes Made
+
+### Backend (`e:\carriermind\backend`)
+
+| File | Change |
+|------|--------|
+| [server.js](file:///e:/carriermind/backend/server.js) | Fixed CORS (uses `FRONTEND_URL` env var), removed feedback route, removed unused passport import, added `GET /` health check |
+| [package.json](file:///e:/carriermind/backend/package.json) | Removed 8 unused deps (mysql2, passport, openai, etc.), added `engines` field, fixed `main` entry |
+| [services/aiService.js](file:///e:/carriermind/backend/services/aiService.js) | Fixed broken `http://https://` URL → uses env-based `API_BASE_URL` |
+| [.env.example](file:///e:/carriermind/backend/.env.example) | **[NEW]** Template showing required env vars |
+
+### Frontend (`e:\carriermind\frontend`)
+
+| File | Change |
+|------|--------|
+| [App.js](file:///e:/carriermind/frontend/src/App.js) | Removed FeedbackForm import and `/ui` route |
+| [Home.js](file:///e:/carriermind/frontend/src/pages/Home.js) | Removed Feedback card, updated section title |
+| [About.js](file:///e:/carriermind/frontend/src/pages/About.js) | Removed Feedback feature description |
+| [Intro.js](file:///e:/carriermind/frontend/src/pages/Intro.js) | Removed UI Feedback card |
+| [CareerRoadmap.js](file:///e:/carriermind/frontend/src/pages/CareerRoadmap.js) | Removed `withCredentials: true` from 2 axios calls |
+| [.env](file:///e:/carriermind/frontend/.env) | Set `REACT_APP_API_URL=http://localhost:5000` |
+| [vercel.json](file:///e:/carriermind/frontend/vercel.json) | **[NEW]** SPA rewrite rule for React Router |
+
+### Verification
+- ✅ `npm run build` — **compiled successfully** (exit code 0)
+
+---
+
+## 🚀 Deployment Instructions
+
+### Step 1: Deploy Backend on Render
+
+1. Push your code to **GitHub** (if not already)
+2. Go to [render.com](https://render.com) → **New** → **Web Service**
+3. Connect your GitHub repo and **select the `backend` folder** as root directory
+4. Configure:
+
+   | Setting | Value |
+   |---------|-------|
+   | **Name** | `carriermind-api` |
+   | **Root Directory** | `backend` |
+   | **Runtime** | Node |
+   | **Build Command** | `npm install` |
+   | **Start Command** | `npm start` |
+
+5. Add **Environment Variables**:
+
+   | Key | Value |
+   |-----|-------|
+   | `GEMINI_API_KEY` | *your Gemini API key* |
+   | `FRONTEND_URL` | *(leave blank for now, add after Vercel deploy)* |
+
+6. Click **Create Web Service** → wait for it to deploy
+7. Copy the deployed URL (e.g., `https://carriermind-api.onrender.com`)
+
+---
+
+### Step 2: Deploy Frontend on Vercel
+
+1. Go to [vercel.com](https://vercel.com) → **Add New** → **Project**
+2. Import your GitHub repo
+3. Configure:
+
+   | Setting | Value |
+   |---------|-------|
+   | **Root Directory** | `frontend` |
+   | **Framework Preset** | Create React App |
+   | **Build Command** | `npm run build` |
+   | **Output Directory** | `build` |
+
+4. Add **Environment Variable**:
+
+   | Key | Value |
+   |-----|-------|
+   | `REACT_APP_API_URL` | `https://carriermind-api.onrender.com` *(your Render URL from Step 1)* |
+
+5. Click **Deploy**
+
+---
+
+### Step 3: Update Render CORS
+
+Go back to **Render** dashboard → your service → **Environment**:
+
+| Key | Value |
+|-----|-------|
+| `FRONTEND_URL` | `https://your-app.vercel.app` *(your Vercel URL from Step 2)* |
+
+Redeploy the backend service after updating.
+
+---
+
+> [!IMPORTANT]
+> **Never commit your `.env` file with real API keys to Git.** Both `.gitignore` files already exclude `.env`. Always set secrets via the Render/Vercel dashboards.
+
+> [!NOTE]
+> Render free tier sleeps after inactivity — the first request after sleep takes ~30-60 seconds. This is normal.

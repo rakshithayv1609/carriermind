@@ -34,10 +34,6 @@ function About() {
       title: "5. AI Code Reviewer",
       text: `AI Code Reviewer allows users to paste their code and select a programming language. Once the input is submitted, AI scans the code for potential bugs, errors, inefficiencies, and logical issues. It provides suggestions for improvements, best practices, and optimization tips. In addition, it also generates an improved version of the given code with cleaner formatting, better structure, and enhanced readability. This feature is perfect for developers who want AI-assisted guidance to write optimized and professional-grade code.`,
     },
-    {
-      title: "6. Feedback",
-      text: `Feedback is an important feature where users can share their opinions and experiences about the CareerMind platform. They can enter their name, email, overall experience, and rating (from 1 to 5). Upon submission, AI displays all user feedbacks and stores them permanently in the database. This ensures transparency, continuous improvement, and better user satisfaction as developers can analyze and enhance the platform based on real feedback.`,
-    },
   ];
 
   return (

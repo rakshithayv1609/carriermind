@@ -52,13 +52,6 @@ function Home() {
       image: "https://cdn-icons-png.flaticon.com/512/1383/1383260.png",
       path: "/code-review",
     },
-    {
-      title: "Feedback",
-      description: "Tell us how helpful and useful your experience was.",
-      color: "#E1F5FE",
-      image: "https://cdn-icons-png.flaticon.com/512/889/889140.png",
-      path: "/ui",
-    },
   ];
 
   return (
@@ -124,7 +117,7 @@ function Home() {
       {/* FEATURES SECTION */}
       <Box sx={{ padding: "30px", flex: 1 }}>
         <Typography variant="h4" align="center" sx={{ mb: 3, fontWeight: "bold" }}>
-          Features & Feedback 💡
+          Features & Tools 💡
         </Typography>
 
         <Grid container spacing={3} justifyContent="center">

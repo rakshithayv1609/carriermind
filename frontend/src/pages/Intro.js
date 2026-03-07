@@ -26,7 +26,6 @@ function Intro() {
     { title: "Interview Preparation", desc: "Mock interviews with AI scoring & analysis.", color: "#FFF3E0" },
     { title: "Doubt Solver", desc: "AI + Community answers for every technical question.", color: "#FCE4EC" },
     { title: "AI Code Reviewer", desc: "Code optimization, best practices & bug detection.", color: "#EDE7F6" },
-    { title: "UI Feedback", desc: "Your feedback improves the app experience!", color: "#BBDEFB" },
   ];
 
   return (

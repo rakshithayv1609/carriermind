@@ -53,8 +53,7 @@ const CareerRoadmap = () => {
     try {
       const res = await axios.post(
         `${API}/api/generate-roadmap`,
-        formData,
-        { withCredentials: true }
+        formData
       );
 
       setRoadmap(res.data.roadmap);
@@ -87,7 +86,6 @@ const CareerRoadmap = () => {
         },
         {
           responseType: "blob",
-          withCredentials: true,
         }
       );
 
